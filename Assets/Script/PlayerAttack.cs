@@ -10,6 +10,13 @@ public class PlayerAttack : MonoBehaviour
     {
 
     }
+
+    private void Update()
+    {
+        
+    }
+
+
     public void Attack()
     {
         if(_skillIndex == 0) //上側のボタン
@@ -22,7 +29,6 @@ public class PlayerAttack : MonoBehaviour
         }
         else if(_skillIndex == 2) //外側のボタン
         {
-            
             Debug.Log("射撃");
         }
         else if(_skillIndex == 3) //下側のボタン
