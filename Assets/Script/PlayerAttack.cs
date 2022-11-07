@@ -4,30 +4,35 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] int _tacklePower = 3;
-    int _weaponIndex = 0;
-    
-    public void Attack()
-    {
-        if(_weaponIndex == 0)
-        {
-            Debug.Log("突撃");
-        }
-        else if(_weaponIndex == 1)
-        {
-            Debug.Log("射撃");
-        }
-        else if(_weaponIndex == 2)
-        {
-            Debug.Log("斬撃");
-        }
-    }
-    public void WeaponChange(int i)
-    {
-        _weaponIndex = i;
-    }
-    void Tackle()
+    int _skillIndex = 0;
+
+    private void Start()
     {
 
     }
+    public void Attack()
+    {
+        if(_skillIndex == 0) //上側のボタン
+        {
+            Debug.Log("斬撃"); 
+        }
+        else if(_skillIndex == 1) //内側のボタン
+        {
+            Debug.Log("回復");
+        }
+        else if(_skillIndex == 2) //外側のボタン
+        {
+            
+            Debug.Log("射撃");
+        }
+        else if(_skillIndex == 3) //下側のボタン
+        {
+            Debug.Log("防御");
+        }
+    }
+    public void SkillChange(int i)
+    {
+        _skillIndex = i;
+    }
+    
 }
