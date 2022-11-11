@@ -272,6 +272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hp: 100
+  _maxHp: 100
+  _hpSlider: {fileID: 1004364104}
 --- !u!136 &104995369
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2748,9 +2750,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841f286e56a18b746b0e284298cfd40e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillIndex: 0
-  _left: 0
-  _rb: {fileID: 0}
 --- !u!114 &104995377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2769,6 +2768,9 @@ MonoBehaviour:
   _jumpPower: 5
   _left: 0
   _avoid: 10
+  _avoidCoolTime: 1
+  _attackPower: 5
+  _attackCoolTime: 1.5
 --- !u!1 &217382894
 GameObject:
   m_ObjectHideFlags: 0
@@ -2820,14 +2822,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3720,6 +3722,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hp: 100
+  _maxHp: 100
+  _hpSlider: {fileID: 1551071337}
 --- !u!136 &881007978
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -6196,9 +6200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841f286e56a18b746b0e284298cfd40e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillIndex: 0
-  _left: 1
-  _rb: {fileID: 0}
 --- !u!114 &881007986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6217,6 +6218,9 @@ MonoBehaviour:
   _jumpPower: 5
   _left: 1
   _avoid: 10
+  _avoidCoolTime: 1
+  _attackPower: 5
+  _attackCoolTime: 1.5
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -6387,7 +6391,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0.336
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6397,7 +6401,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20800
+  m_Name: pb_Mesh20786
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6561,7 +6565,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20640
+  m_Name: pb_Mesh20632
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7054,7 +7058,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20714
+  m_Name: pb_Mesh20706
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7263,14 +7267,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7294,7 +7298,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20672
+  m_Name: pb_Mesh20664
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7495,7 +7499,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20758
+  m_Name: pb_Mesh20748
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7659,7 +7663,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20884
+  m_Name: pb_Mesh20840
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7903,7 +7907,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0.634
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -10110,7 +10114,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12210,7 +12214,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
