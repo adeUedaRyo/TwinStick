@@ -6,16 +6,16 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     int _skillIndex = 0;
-    [SerializeField] float _speed = 5;      //現在の移動速度
-    [SerializeField] float _defaultSpeed = 5; //移動速度の初期値
-    [SerializeField] float _dashSpeed = 10; //移動速度の初期値
-    [SerializeField] float _jumpPower = 3;  //ジャンプ力
-    [SerializeField] bool _left = true;    //左のキャラかどうか
-    [SerializeField] int _avoid = 3;//回避の速度
-    [SerializeField] float _avoidCoolTime = 1f; //回避のクールタイム
-    [SerializeField] int _attackPower = 5; //攻撃力
-    [SerializeField] float _attackCoolTime = 1.5f; //攻撃のクールタイム
-
+    [SerializeField,Tooltip("移動速度")] float _speed = 5;      
+    [SerializeField,Tooltip("移動速度の初期値")] float _defaultSpeed = 5;
+    [SerializeField,Tooltip("ダッシュ中の移動速度")] float _dashSpeed = 10;
+    [SerializeField,Tooltip("ジャンプ力")] float _jumpPower = 3;  
+    [SerializeField,Tooltip("左のキャラかどうか")] bool _left = true;
+    [SerializeField,Tooltip("回避の速度")] int _avoid = 3;
+    [SerializeField,Tooltip("回避のクールタイム")] float _avoidCoolTime = 1f;
+    [SerializeField,Tooltip("攻撃力")] int _attackPower = 5;
+    [SerializeField,Tooltip("攻撃のクールタイム")] float _attackCoolTime = 1.5f;
+    [SerializeField, Tooltip("バリア")] GameObject barrier = null;
     Rigidbody _rb = default;
     float _attackChargeTime = 0; // 攻撃をためている時間
     float _timeAvoid, _timeAttack = 0;
@@ -63,44 +63,50 @@ public class PlayerController : MonoBehaviour
             }
             else if (gamepad.leftTrigger.wasPressedThisFrame && _skillIndex == 1 )
             {
-                if(_avoidCoolTime <= _timeAvoid)_rb.AddForce(transform.forward * _avoid,ForceMode.Impulse); // クールタイムが終わっていたら回避する
-                _speed = _dashSpeed; // ボタンを離すまでスピードアップ
+                if (_avoidCoolTime <= _timeAvoid)
+                {
+                    _rb.AddForce(transform.forward * _avoid, ForceMode.Impulse); // クールタイムが終わっていたら回避する
+                    _timeAvoid = 0;
+                }
+                    _speed = _dashSpeed; // ボタンを離すまでスピードアップ
             }
-            else if (gamepad.leftTrigger.isPressed && _skillIndex == 2 && _attackCoolTime <= _timeAvoid)
+            else if (gamepad.leftTrigger.isPressed && _skillIndex == 2 && _attackCoolTime <= _timeAvoid) // 攻撃を溜める
             {
                 _attackChargeTime += Time.deltaTime;
                 _speed = _defaultSpeed / 5.0f;
             }
             else if (gamepad.leftTrigger.isPressed && _skillIndex == 3)
             {
-                Debug.Log("ガード");
+                barrier.SetActive(true);
             }
             else if (gamepad.leftTrigger.wasReleasedThisFrame)　//ボタンを離したら
             {
                 // 攻撃をためていたら
-                if (_attackChargeTime >0f　&& _attackChargeTime < 1.5f) // 2秒未満
+                if (_attackChargeTime >0f　&& _attackChargeTime < 1.5f && _skillIndex == 2) // 1.5秒未満
                 {
                     Debug.Log("攻撃");
                 }
-                else if(_attackChargeTime < 3f)
+                else if(_attackChargeTime <= 3f && _skillIndex == 2)
                 {
                     Debug.Log("タメ攻撃 小");
                 }
-                else if (_attackChargeTime < 5f)
+                else if (_attackChargeTime < 5f && _skillIndex == 2)
                 {
                     Debug.Log("タメ攻撃 中");
                 }
-                else if (_attackChargeTime < 7f)
+                else if (_attackChargeTime < 7f && _skillIndex == 2)
                 {
                     Debug.Log("タメ攻撃 大");
                 }
-                else
+                else if (_skillIndex == 2)
                 {
                     Debug.Log("タメ攻撃 特大");
                 }
 
                 _speed = _defaultSpeed; // 元のスピードに戻る
                 _attackChargeTime = 0;
+                _timeAttack = 0;
+                barrier.SetActive(false);
             }
 
         }
