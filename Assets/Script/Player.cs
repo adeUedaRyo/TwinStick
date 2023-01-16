@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField,Tooltip("HP")] int _hp = 100;
-    [SerializeField,Tooltip("HP最大値")] int _maxHp = 100;
+    [SerializeField,Tooltip("HP")] float _hp = 100;
+    [SerializeField,Tooltip("HP最大値")] float _maxHp = 100;
     [SerializeField,Tooltip("HPバー")] Slider _hpSlider = null;
 
     bool _guard = false; // バリアの中にいる
@@ -21,12 +21,12 @@ public class Player : MonoBehaviour
     {
         
     }
-    public void Damaged(int damage)
+    public void Damaged(float damage)
     {
         _hp -= damage;
         _hpSlider.value = (float)_hp / (float)_maxHp;
     }
-    public void Recovery(int a)
+    public void Recovery(float a)
     {
         _hp += a;
         if (_hp >= _maxHp) _hp = _maxHp;

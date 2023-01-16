@@ -15,7 +15,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField,Tooltip("回避のクールタイム")] float _avoidCoolTime = 1f;
     [SerializeField,Tooltip("攻撃力")] int _attackPower = 5;
     [SerializeField,Tooltip("攻撃のクールタイム")] float _attackCoolTime = 1.5f;
-    [SerializeField, Tooltip("バリア")] GameObject barrier = null;
+    [SerializeField,Tooltip("バリア")] GameObject _barrier = null;
+    [SerializeField,Tooltip("弾（ため無し、タメ弱、タメ強）")] GameObject _bullet, _bulletA, _bulletB = null;
+    [SerializeField,Tooltip("回復エリア")] GameObject _recoveryArea = null;
+    [SerializeField] Transform _muzzle = null;
     Rigidbody _rb = default;
     float _attackChargeTime = 0; // 攻撃をためている時間
     float _timeAvoid, _timeAttack = 0;
@@ -59,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
             if (gamepad.leftTrigger.wasPressedThisFrame && _skillIndex == 0)
             {
-                Debug.Log("回復");
+                Recovery();
             }
             else if (gamepad.leftTrigger.wasPressedThisFrame && _skillIndex == 1 )
             {
@@ -77,38 +80,20 @@ public class PlayerController : MonoBehaviour
             }
             else if (gamepad.leftTrigger.isPressed && _skillIndex == 3)
             {
-                barrier.SetActive(true);
+                _barrier.SetActive(true);
             }
             else if (gamepad.leftTrigger.wasReleasedThisFrame)　//ボタンを離したら
             {
-                // 攻撃をためていたら
-                if (_attackChargeTime >0f　&& _attackChargeTime < 1.5f && _skillIndex == 2) // 1.5秒未満
+                if (_attackChargeTime != 0 && _skillIndex == 2) // 攻撃をためていたら
                 {
-                    Debug.Log("攻撃");
-                }
-                else if(_attackChargeTime <= 3f && _skillIndex == 2)
-                {
-                    Debug.Log("タメ攻撃 小");
-                }
-                else if (_attackChargeTime < 5f && _skillIndex == 2)
-                {
-                    Debug.Log("タメ攻撃 中");
-                }
-                else if (_attackChargeTime < 7f && _skillIndex == 2)
-                {
-                    Debug.Log("タメ攻撃 大");
-                }
-                else if (_skillIndex == 2)
-                {
-                    Debug.Log("タメ攻撃 特大");
+                    Attack();
                 }
 
                 _speed = _defaultSpeed; // 元のスピードに戻る
                 _attackChargeTime = 0;
                 _timeAttack = 0;
-                barrier.SetActive(false);
+                _barrier.SetActive(false);
             }
-
         }
         else//右
         {
@@ -118,12 +103,46 @@ public class PlayerController : MonoBehaviour
             //ジャンプ
             if (gamepad.rightShoulder.wasPressedThisFrame) _rb.AddForce(0, _jumpPower, 0, ForceMode.Impulse);
 
-
             //スキル変更
             if (gamepad.buttonNorth.wasPressedThisFrame) _skillIndex = 0; //PSだと△
             if (gamepad.buttonWest.wasPressedThisFrame) _skillIndex = 1; //PSだと□
             if (gamepad.buttonEast.wasPressedThisFrame) _skillIndex = 2; //PSだと○
             if (gamepad.buttonSouth.wasPressedThisFrame) _skillIndex = 3; //PSだと×
+
+            if (gamepad.rightTrigger.wasPressedThisFrame && _skillIndex == 0)
+            {
+                Recovery();
+            }
+            else if (gamepad.rightTrigger.wasPressedThisFrame && _skillIndex == 1)
+            {
+                if (_avoidCoolTime <= _timeAvoid)
+                {
+                    _rb.AddForce(transform.forward * _avoid, ForceMode.Impulse); // クールタイムが終わっていたら回避する
+                    _timeAvoid = 0;
+                }
+                _speed = _dashSpeed; // ボタンを離すまでスピードアップ
+            }
+            else if (gamepad.rightTrigger.isPressed && _skillIndex == 2 && _attackCoolTime <= _timeAvoid) // 攻撃を溜める
+            {
+                _attackChargeTime += Time.deltaTime;
+                _speed = _defaultSpeed / 5.0f;
+            }
+            else if (gamepad.rightTrigger.isPressed && _skillIndex == 3)
+            {
+                _barrier.SetActive(true);
+            }
+            else if (gamepad.rightTrigger.wasReleasedThisFrame)　//ボタンを離したら
+            {
+                if (_attackChargeTime != 0 && _skillIndex == 2) // 攻撃をためていたら
+                {
+                    Attack();
+                }
+
+                _speed = _defaultSpeed; // 元のスピードに戻る
+                _attackChargeTime = 0;
+                _timeAttack = 0;
+                _barrier.SetActive(false);
+            }
         }
 
         // 移動
@@ -134,5 +153,28 @@ public class PlayerController : MonoBehaviour
             transform.Translate(0, 0, _speed * Time.deltaTime);
 
         }
+    }
+    void Attack()
+    {
+        if (_attackChargeTime >= 3f)
+        {
+            Instantiate(_bulletB, _muzzle.position, this.transform.rotation);
+            Debug.Log("タメ攻撃");
+        }
+        else if (_attackChargeTime >= 1f)
+        {
+            Instantiate(_bulletA, _muzzle.position, this.transform.rotation);
+            Debug.Log("小タメ攻撃");
+        }
+        else
+        {
+            Instantiate(_bullet, _muzzle.position, this.transform.rotation);
+            Debug.Log("攻撃");
+        }
+    }
+    void Recovery()
+    {
+        Instantiate(_recoveryArea, new Vector3(this.transform.position.x, 0 , this.transform.position.z), this.transform.rotation);
+        Debug.Log("回復");
     }
 }
