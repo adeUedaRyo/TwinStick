@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField,Tooltip("移動速度の初期値")] float _defaultSpeed = 5;
     [SerializeField,Tooltip("ダッシュ中の移動速度")] float _dashSpeed = 10;
     [SerializeField,Tooltip("ジャンプ力")] float _jumpPower = 3;  
-    [SerializeField,Tooltip("左のキャラかどうか")] bool _left = true;
+    [SerializeField,Tooltip("左のキャラかどうか")] bool _isLeft = true;
     [SerializeField,Tooltip("回避の速度")] int _avoid = 3;
     [SerializeField,Tooltip("回避のクールタイム")] float _avoidCoolTime = 1f;
     [SerializeField,Tooltip("攻撃力")] int _attackPower = 5;
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField,Tooltip("バリア")] GameObject _barrier = null;
     [SerializeField,Tooltip("弾（ため無し、タメ弱、タメ強）")] GameObject _bullet, _bulletA, _bulletB = null;
     [SerializeField,Tooltip("回復エリア")] GameObject _recoveryArea = null;
+    [SerializeField, Tooltip("対応するUI")] SkillUI _skillUI = null;
     [SerializeField] Transform _muzzle = null;
     Rigidbody _rb = default;
     float _attackChargeTime = 0; // 攻撃をためている時間
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        UIChange();
     }
 
     // Update is called once per frame
@@ -44,7 +46,7 @@ public class PlayerController : MonoBehaviour
         _timeAvoid += Time.deltaTime;
         _timeAttack += Time.deltaTime;
         //移動
-        if (_left)//左
+        if (_isLeft)//左
         {
             //スティック入力の検出
             _stickValue = gamepad.leftStick.ReadValue().normalized;
@@ -52,14 +54,29 @@ public class PlayerController : MonoBehaviour
             //ジャンプ
             if (gamepad.leftShoulder.wasPressedThisFrame) _rb.AddForce(0, _jumpPower, 0, ForceMode.Impulse);
 
-            
+
 
             //スキル変更
-            if (gamepad.dpad.up.wasPressedThisFrame) _skillIndex = 0; //方向キー上
-            if (gamepad.dpad.right.wasPressedThisFrame) _skillIndex = 1; //方向キー右
-            if (gamepad.dpad.left.wasPressedThisFrame) _skillIndex = 2; //方向キー左
-            if (gamepad.dpad.down.wasPressedThisFrame) _skillIndex = 3; //方向キー下
-
+            if (gamepad.dpad.up.wasPressedThisFrame)
+            {
+                _skillIndex = 0; //方向キー上
+                UIChange();
+            }
+            if (gamepad.dpad.right.wasPressedThisFrame)
+            {
+                _skillIndex = 1; //方向キー右
+                UIChange();
+            }
+            if (gamepad.dpad.left.wasPressedThisFrame)
+            {
+                _skillIndex = 2; //方向キー左
+                UIChange();
+            }
+            if (gamepad.dpad.down.wasPressedThisFrame)
+            {
+                _skillIndex = 3; //方向キー下
+                UIChange();
+            }
             if (gamepad.leftTrigger.wasPressedThisFrame && _skillIndex == 0)
             {
                 Recovery();
@@ -104,11 +121,26 @@ public class PlayerController : MonoBehaviour
             if (gamepad.rightShoulder.wasPressedThisFrame) _rb.AddForce(0, _jumpPower, 0, ForceMode.Impulse);
 
             //スキル変更
-            if (gamepad.buttonNorth.wasPressedThisFrame) _skillIndex = 0; //PSだと△
-            if (gamepad.buttonWest.wasPressedThisFrame) _skillIndex = 1; //PSだと□
-            if (gamepad.buttonEast.wasPressedThisFrame) _skillIndex = 2; //PSだと○
-            if (gamepad.buttonSouth.wasPressedThisFrame) _skillIndex = 3; //PSだと×
-
+            if (gamepad.buttonNorth.wasPressedThisFrame)
+            {
+                _skillIndex = 0; //PSだと△
+                UIChange();
+            }
+            if (gamepad.buttonWest.wasPressedThisFrame)
+            {
+                _skillIndex = 1; //PSだと□
+                UIChange();
+            }
+            if (gamepad.buttonEast.wasPressedThisFrame)
+            {
+                _skillIndex = 2; //PSだと○
+                UIChange();
+            }
+            if (gamepad.buttonSouth.wasPressedThisFrame)
+            {
+                _skillIndex = 3; //PSだと×
+                UIChange();
+            }
             if (gamepad.rightTrigger.wasPressedThisFrame && _skillIndex == 0)
             {
                 Recovery();
@@ -176,5 +208,9 @@ public class PlayerController : MonoBehaviour
     {
         Instantiate(_recoveryArea, new Vector3(this.transform.position.x, 0 , this.transform.position.z), this.transform.rotation);
         Debug.Log("回復");
+    }
+    void UIChange()
+    {
+        _skillUI.ActiveSkill(_skillIndex);
     }
 }

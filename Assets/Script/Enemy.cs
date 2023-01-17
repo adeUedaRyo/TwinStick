@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
         _time += Time.deltaTime;
         if (_time >= _attackCT)
         {
-            Instantiate(_bullet,_muzzle);
+            Instantiate(_bullet,_muzzle.transform.position, this.transform.rotation);
             _time = 0;
         }
     }
